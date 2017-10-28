@@ -1,0 +1,37 @@
+body {
+    background-image: url("../images/deathstar.jpeg");
+}
+h1 {
+  color: yellow;
+  text-align: center;
+  font-family: 'Anton', sans-serif;
+  font-size: 50px;
+}
+h2 {
+  color: yellow;
+  font-family: 'Anton', sans-serif;
+  font-size: 30px;
+  left: 2%;
+}
+#your-character, #enemies-available, #fight-section, #defender {
+  height: 125px;
+}
+.jedi-pic {
+  height: 100px;
+  width: 100px;
+  border-width: 5px;
+  border-style:solid;
+  border-color: green;
+  margin: 10px;
+}
+.container {
+left: 0;
+margin-left: 2%;
+}
+.row {
+  height: 150px;
+}
+.col-md-6 {
+  position: fixed;
+  padding-top: 40px;
+}
