@@ -6,6 +6,7 @@ body {
 	 background-size: cover;
 	 margin: 0;
    font-family: 'Anton', sans-serif;
+   font-size: 15px;
 }
 
 p {
@@ -19,6 +20,7 @@ p {
 	height: 150px;
 	padding-top: 100px;
 	margin: 5px;
+  background-size: 100%;
 }
 
 .jumbotron {
@@ -43,10 +45,14 @@ p {
 }
 .content-center {
   color: yellow;
-	margin-left: 200px;
-	margin-right: 200px;
+	margin-left: 10px;
+	margin-right: 10px;
 }
 .text-center, .topbar {
   color: yellow;
   font-family: 'Anton', sans-serif;
+  font-size: 30px;
+}
+.col-md-3 {
+    flex: 1;
 }

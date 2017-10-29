@@ -1,14 +1,22 @@
-var characters = [
+var characters = [    // this is an object that stores each character's name, stats, and picture
+                      //this object is the souce from which jquery will dynamically create
+                      //the elements of the game.
 	{ name: "Yoda", HP: 120, AP: 8, CAP: 8, image:"./assets/images/yoda.png"},
 	{ name: "Darth Vader", HP: 140, AP: 10, CAP: 10, image:"./assets/images/darth.png"},
 	{ name: "Mace Windu", HP: 110, AP: 13, CAP: 13, image:"./assets/images/mace.png"},
 	{ name: "Emperor", HP: 130, AP: 5, CAP: 5, image:"./assets/images/emperor.png"}
  ];
-var yourCharacter;
-var defender;
-var defender1;
-var count = 0; // KEEPS TRACK OF WINS EACH ROUND..
+var yourCharacter;  //global variable assigned to the character you choose to play with
+var defender;      //global variable assigned to the first defender you select
+var defender1;     //global variable assigned to the second defender you select
+var count = 0; // tracks how many rounds you've won
+var enemiesAvailable;
 
+
+//this function accepts two values: fighter and index then populates fighter with the
+//data from the object above the index argument allows us to accept an iterator in
+//that spot so we can use this function in a loop to recursively populate multiple
+//elements.
 function setFighterAttributes (fighter, index) {
 
 	fighter.data("charname", characters[index].name);
@@ -18,60 +26,84 @@ function setFighterAttributes (fighter, index) {
 }
 
 //=================================================================================================================
-
+//this function will dynamically populate the empty div #yourCharactersListId with the four character
+//choices.  We will call it to render the initial game board
 function loadCharacters(){
 
-		//A LOOP THAT ITERATES THROUGH THE CHARACTERS ARRAY...AND DYNAMICALLY CREATING DIVS FOR ALL PLAYERS..
+	$("#yourCharactersListId").text("Available Characters:");
+
+
+		//iterates throuth the characters[] array, and dynamically creates a div for each character
+    //using the setFighterAttributes function above
 		for(var i = 0; i < characters.length; i++) {
 			var charactersDiv = $("<div>").addClass("col-md-3 characters player");
 			setFighterAttributes(charactersDiv, i);
 
-		//APPENDING THE NEW DIV TO THE TOP ROW "yourCharactersList"....
+		//once our newly created div is created and populated, this renders it to the DOM
+    //inside the previously empty  #yourCharactersListId
 			$("#yourCharactersListId").append(charactersDiv);
-				charactersDiv.append("<p>" + characters[i].name + "</p>");
-	       		charactersDiv.css("background-image", "url(" + characters[i].image + ")");
-	       		charactersDiv.append("<p>" + characters[i].HP + "</p>");
+			charactersDiv.append("<p>" + characters[i].name + "</p>");
+	    charactersDiv.css("background-image", "url(" + characters[i].image + ")");
+	    charactersDiv.append("<p>HP: " + characters[i].HP + "</p>");
 			}
 		}
 //==================================================================================================================
-
+//this ensures proper page loading
 $(document).ready(function() {
 
+
+//here we call the function above, this will be the first time any dynamic content
+//is actually rendered to the DOM
 	loadCharacters();
 
-	//ATTACHING ON-CLICK EVENTS TO "yourCharacterList" DIVS...
+
+
+	//this listening for any click on something with a class of .player (which all of our character
+//divs have as a result of line 35 above)
 	$(".player").on("click", function() {
-
+		$("#yourCharacterId").text("Your Character:");
 		for(var i = 0; i < characters.length; i++) {
-
-			//IF THE CHOSEN PLAYERNAME MATCHES TO THAT OF THE "characters" List....
+			//if the player name corresponding with the item that is clicked on matches any name from the characters
+      //object on lines 4-7, then a new variable called player 1 is created, it is assigned to a div
+      //that div is has 3 classes added to it.
+      //The global variable 'yourCharacter' is populated with the matching values from the characters object
   			if($(this).data("charname") === characters[i].name){
-  				//ASSINGING A NEW DIV FOR IT..
 				var player1 = $("<div>").addClass("col-md-3 characters player");
 				yourCharacter = characters[i];
 				setFighterAttributes(player1, i);
 
-				//APPENDING THE CHOSEN PLAYER TO THE "yourCharcterId" DIV....
+
+
+				//still inside the conditional, this block of code appends everthing that happened in 63-66
+        //into the previously empty div with the id #yourCharacterId
 				$("#yourCharacterId").append(player1);
 				player1.append("<p>" + characters[i].name + "</p>");
 				player1.css("background-image", "url(" + characters[i].image + ")");
-				var player1HP_p = $("<p>").addClass("yourPlayerHP").html(characters[i].HP);
+				var player1HP_p = $("<p>").addClass("yourPlayerHP").html("<p>HP: " + characters[i].HP + "</p>");
 	       		player1.append(player1HP_p);
 			}
 		}
-
-		//THIS WILL STOP THE ONCLICK EVENT...
+		//this stops the on-click event
 		$(".player").off();
-		// HIDING THE CHOSEN CHARACTER FROM THE yourCharacterListId....AND THEN GIVING A NEW MESSAGE..
+		// hides the image of player1
 		$(this).hide();
-		$(".message").text("Enemies Available. Pick your Defender!");
-		enemiesAvailable = characters.slice(characters[i]);
+		$(".message").text("Who shall be your first victim?");
+    //This is a really cool method that selects a subset of a given element based on index number.
+		//You can set both a start point and an optional end point.
+		//In this case the start point is [i]th item in the characters [] array.
+		//Using console.log, I can see that i is undefined before it is created on line 57, it then iterates
+		//through the values 0-4 in the for loop (based on the length of the characters [] array at the time).
+		//Because the walue of i at this point is 4, this line sets the value of the variable enemiesAvailable to //the full character [] array.
+    enemiesAvailable = characters.slice(characters[i]);
 
 		//===============================================================================================
 
 		function pickDefender(){
 			//ATTACHING ON-CLICK EVENTS TO "yourDefenderId" DIV....
 			$(".player").on("click", function(){
+
+				$(yourDefenderId).text("Your Adversary:");
+
 
 				for(var i = 0; i < enemiesAvailable.length; i++) {
 
@@ -85,8 +117,8 @@ $(document).ready(function() {
 						$("#yourDefenderId").append(defender1);
 						defender1.append("<p>" + characters[i].name + "</p>");
 						defender1.css("background-image", "url(" + characters[i].image + ")");
-						var defender1HP_p = $("<p>").addClass("yourDefenderHP").html(characters[i].HP);
-				       	defender1.append(defender1HP_p);
+						var defender1HP_p = $("<p>").addClass("yourDefenderHP").html("<p> HP: " + characters[i].HP +"</p");
+				    defender1.append(defender1HP_p);
 					}
 				}
 
@@ -125,7 +157,6 @@ $(document).ready(function() {
 					$(".btn-danger").prop('disabled', true);
 					$(".message").text("You won this round. Please select your next Defender");
 					count++;
-					console.log(count);
 					// sounds.win.sound.play();
 					defender1.hide();
 
@@ -138,10 +169,10 @@ $(document).ready(function() {
 		function startAttack() {
 
 			yourCharacter["HP"] -= defender["AP"];
-			$(".yourPlayerHP").text(yourCharacter["HP"]);
+			$(".yourPlayerHP").text("HP: " + yourCharacter["HP"]);
 
 			defender["HP"] -= yourCharacter["AP"];
-			$(".yourDefenderHP").text(defender["HP"]);
+			$(".yourDefenderHP").text("HP: " + defender["HP"]);
 			yourCharacter["AP"] += yourCharacter["CAP"];
 		}
 	});
