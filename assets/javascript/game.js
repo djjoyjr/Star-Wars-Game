@@ -172,7 +172,7 @@ $(document).ready(function() {
 
 		function startAttack() {
 			$("#combat-updates").text(yourCharacter["name"] + " attacked " + defender ["name"] + " for " + currentAP + " points.");
-			
+
 			yourCharacter["HP"] -= defender["CAP"];
 			$(".yourPlayerHP").text("HP: " + yourCharacter["HP"]);
 
